@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1> Plant Detail</h1>
+
+{{plant.name}}
+
+<div class="wrapper">
+<div class="card">
+    <div class="card-content">
+      <span class="card-title">{{ plant.name }}</span>
+      <p>Light: {{ plant.amount_of_light }}</p>
+      <p>Water: {{ plant.amount_of_water }}</p>
+      <p>Description: {{ plant.description }}</p>
+      <p>Worth Buying: {{ plant.worth_buying }}</p>
+      <p>Created: {{ plant.created }}</p>
+  </div>
+
+  <div class="card-action">
+    <a href="{% url 'plants_update' plant.id %} ">Edit</a>
+    <a href="{% url 'plants_delete' plant.id %}">Delete</a>
+  </div>
+
+  <div class="col s6">
+
+  
+    <form action="{% url 'add_water' plant.id %}" method="post">
+      {% csrf_token %}
+      {{ water_form.as_p }}
+      <input type="submit" class="btn" value="Add Drink">
+    </form>
+
+    <table class="striped">
+      <thead>
+        <tr><th>Date</th><th>Drink</th></tr>
+      </thead>
+      <tbody>
+        {% for water in plant.water_set.all %}
+          <tr>
+            <td>{{water.date}}</td>
+            <td>{{water.get_drink_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<script>
+  var dateEl = document.getElementById('id_date');
+  M.Datepicker.init(dateEl, {
+    format: 'yyyy-mm-dd',
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    autoClose: true
+  });
+
+  var selectEl = document.getElementById('id_drink');
+  M.FormSelect.init(selectEl);
+
+</script>  
+
+
+{% endblock %}
